@@ -1,0 +1,31 @@
+{
+  "name": "wat-test-project",
+  "version": "1.0.0",
+  "description": "WillowTree Name Game",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.15.2",
+    "babel-preset-react": "^6.16.0",
+    "babelify": "^7.3.0",
+    "lodash": "^4.16.6",
+    "react": "^15.3.2",
+    "react-bootstrap": "^0.30.6",
+    "react-dom": "^15.3.2",
+    "superagent": "^2.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify -t [ babelify --presets [ react ] ] src/main.js -o build/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/two7sclash/wat-test-project.git"
+  },
+  "author": "two7sclash",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/two7sclash/wat-test-project/issues"
+  },
+  "homepage": "https://github.com/two7sclash/wat-test-project#readme"
+}
