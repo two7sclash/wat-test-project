@@ -12,34 +12,42 @@ var NameGame = React.createClass({
   },
 
   componentDidMount: function() {
-    var _this = this;
     this.serverRequest =
     request.get(this.props.source)
-        .then(function (response) {
-          _this.setState({
-            people: response.data
+        .then((response) => {
+          var randoms = _.sampleSize(response.data, 5),
+          theOne = _.sample(randoms);
+            this.setState({
+            people: randoms,
+            selected: theOne.name
           })
         })
     },
+
 
     componentWillUnmount: function() {
     this.serverRequest.abort();
     },
 
     render: function() {
+
       return (
-        <article>
-          {this.state.people.map(function(person, index) {
-            return (
-              <div key={index} className="person">
-                <img src={person.url} />
-                <span class="name hidden">
-                  <h2>{person.name}</h2>
-                </span>
-              </div>
-            );
-          })}
-        </article>
+        <div>
+          <h1>Who is {this.state.selected}?</h1>
+          {
+            this.state.people.map(function(person, index){
+              var classNameExt = this.state.selected === person.name ? 'right' : 'wrong';
+
+              return (
+                <article key={index} className="person">
+                  <img src={person.url}  />
+                  <span className={"name hidden " + classNameExt}>
+                    <h2>{person.name}</h2>
+                  </span>
+                </article>
+              );
+            }, this)}
+        </div>
       )
     }
   });

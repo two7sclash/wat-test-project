@@ -39177,10 +39177,12 @@ var NameGame = React.createClass({
   },
 
   componentDidMount: function () {
-    var _this = this;
-    this.serverRequest = request.get(this.props.source).then(function (response) {
-      _this.setState({
-        people: response.data
+    this.serverRequest = request.get(this.props.source).then(response => {
+      var randoms = _.sampleSize(response.data, 5),
+          theOne = _.sample(randoms);
+      this.setState({
+        people: randoms,
+        selected: theOne.name
       });
     });
   },
@@ -39190,17 +39192,27 @@ var NameGame = React.createClass({
   },
 
   render: function () {
+
     return React.createElement(
-      'article',
+      'div',
       null,
+      React.createElement(
+        'h1',
+        null,
+        'Who is ',
+        this.state.selected,
+        '?'
+      ),
       this.state.people.map(function (person, index) {
+        var classNameExt = this.state.selected === person.name ? 'right' : 'wrong';
+
         return React.createElement(
-          'div',
+          'article',
           { key: index, className: 'person' },
           React.createElement('img', { src: person.url }),
           React.createElement(
             'span',
-            { 'class': 'name hidden' },
+            { className: "name hidden " + classNameExt },
             React.createElement(
               'h2',
               null,
@@ -39208,7 +39220,7 @@ var NameGame = React.createClass({
             )
           )
         );
-      })
+      }, this)
     );
   }
 });
