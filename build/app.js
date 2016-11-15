@@ -39161,30 +39161,100 @@ module.exports = validateDOMNesting;
 module.exports = require('./lib/React');
 
 },{"./lib/React":80}],198:[function(require,module,exports){
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _ = require('lodash'),
     request = require('axios'),
     ReactDOM = require('react-dom'),
     React = require('react');
 
+function isDefined(val) {
+  return val != null;
+}
+
+function randomize(data) {
+  ;
+  var randoms = _.sampleSize(data, 5),
+      theOne = _.sample(randoms);
+  return {
+    randoms: randoms,
+    theOne: theOne
+  };
+}
+
+var ToggleDisplay = React.createClass({
+  displayName: 'ToggleDisplay',
+
+
+  propTypes: {
+    hide: React.PropTypes.bool,
+    show: React.PropTypes.bool
+  },
+
+  shouldHide: function () {
+    var shouldHide;
+    if (isDefined(this.props.show)) {
+      shouldHide = !this.props.show;
+    } else if (isDefined(this.props.hide)) {
+      shouldHide = this.props.hide;
+    } else {
+      shouldHide = false;
+    }
+
+    return shouldHide;
+  },
+
+  render: function () {
+    let style = {};
+
+    if (this.shouldHide()) {
+      style.display = 'none';
+    }
+
+    return React.createElement('span', _extends({ style: style }, this.props));
+  }
+
+});
+
 var NameGame = React.createClass({
   displayName: 'NameGame',
 
-
   getInitialState: function () {
     return {
-      people: []
+      randoms: [],
+      theOne: ""
     };
+  },
+
+  toggleHighlight: function (i) {
+    var newPeople = this.state.randoms;
+    newPeople[i].highlighted = !newPeople[i].highlighted;
+    this.setState({ randoms: newPeople });
+
+    if (this.state.randoms[i].name === this.state.theOne.name) {
+      setTimeout(() => {
+        init();
+      }, 2000);
+    }
   },
 
   componentDidMount: function () {
     this.serverRequest = request.get(this.props.source).then(response => {
-      var randoms = _.sampleSize(response.data, 5),
-          theOne = _.sample(randoms);
-      this.setState({
-        people: randoms,
-        selected: theOne.name
+      _.each(response.data, function (element) {
+        element.highlighted = false;
       });
+      this.cache = response.data;
+      //
+      let state = randomize(this.cache);
+      ;
+      this.setState(state);
     });
+  },
+
+  componentWillReceiveProps: function () {
+
+    let state = randomize(this.cache);
+    this.setState(state);
   },
 
   componentWillUnmount: function () {
@@ -39200,24 +39270,22 @@ var NameGame = React.createClass({
         'h1',
         null,
         'Who is ',
-        this.state.selected,
+        this.state.theOne.name,
         '?'
       ),
-      this.state.people.map(function (person, index) {
-        var classNameExt = this.state.selected === person.name ? 'right' : 'wrong';
-
+      this.state.randoms.map(function (person, index) {
+        //
+        var classNameRejoinder = this.state.theOne.name === person.name ? 'right' : 'wrong';
+        //var classNameVisible = {this.state.isHidden ? "hidden" :""}
+        // change state in specific NOTE
         return React.createElement(
           'article',
-          { key: index, className: 'person' },
+          { key: index, className: 'person', onClick: this.toggleHighlight.bind(null, index) },
           React.createElement('img', { src: person.url }),
           React.createElement(
-            'span',
-            { className: "name hidden " + classNameExt },
-            React.createElement(
-              'h2',
-              null,
-              person.name
-            )
+            ToggleDisplay,
+            { className: "name " + classNameRejoinder, show: person.highlighted },
+            person.name
           )
         );
       }, this)
@@ -39225,6 +39293,8 @@ var NameGame = React.createClass({
   }
 });
 
-ReactDOM.render(React.createElement(NameGame, { source: 'http://api.namegame.willowtreemobile.com/' }), document.getElementById("namegame"));
+var init = function f() {
+  ReactDOM.render(React.createElement(NameGame, { source: 'http://api.namegame.willowtreemobile.com/' }), document.getElementById("namegame"));return f;
+}();
 
 },{"axios":2,"lodash":52,"react":197,"react-dom":54}]},{},[198]);

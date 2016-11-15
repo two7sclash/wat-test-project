@@ -3,47 +3,120 @@ request = require('axios'),
 ReactDOM = require('react-dom'),
 React = require('react');
 
-var NameGame = React.createClass({
+function isDefined(val) { return val != null; }
 
+function randomize(data){
+  ;
+  var randoms = _.sampleSize(data, 5),
+  theOne = _.sample(randoms);
+  return {
+    randoms : randoms,
+    theOne : theOne
+    }
+
+}
+
+var ToggleDisplay = React.createClass({
+
+	propTypes: {
+		hide: React.PropTypes.bool,
+		show: React.PropTypes.bool
+	},
+
+	shouldHide: function() {
+		var shouldHide;
+		if(isDefined(this.props.show)) {
+			shouldHide = !this.props.show;
+		}
+		else if(isDefined(this.props.hide)) {
+			shouldHide = this.props.hide;
+		}
+		else {
+			shouldHide = false;
+		}
+
+		return shouldHide;
+	},
+
+	render: function() {
+		let style = {};
+
+		if(this.shouldHide()) {
+			style.display = 'none';
+		}
+
+		return (
+			<span style={style} {...this.props} />
+		);
+	}
+
+});
+
+var NameGame = React.createClass({
   getInitialState: function() {
     return {
-      people: []
+      randoms: [],
+      theOne: ""
     }
   },
+
+  toggleHighlight: function(i) {
+      var newPeople = this.state.randoms;
+      newPeople[i].highlighted = !newPeople[i].highlighted
+      this.setState({ randoms: newPeople });
+
+      if (this.state.randoms[i].name === this.state.theOne.name)
+      {
+        setTimeout(() => {
+          init()
+        }, 2000);
+      }
+    },
 
   componentDidMount: function() {
     this.serverRequest =
     request.get(this.props.source)
         .then((response) => {
-          var randoms = _.sampleSize(response.data, 5),
-          theOne = _.sample(randoms);
-            this.setState({
-            people: randoms,
-            selected: theOne.name
-          })
+          _.each(response.data, function(element) {
+	           element.highlighted = false;
+          });
+          this.cache = response.data;
+          //
+          let state = randomize(this.cache);
+          ;
+            this.setState(state)
         })
     },
 
+    componentWillReceiveProps: function() {
+
+      let state = randomize(this.cache);
+      this.setState(state)
+    },
 
     componentWillUnmount: function() {
-    this.serverRequest.abort();
+      this.serverRequest.abort();
     },
 
     render: function() {
 
       return (
         <div>
-          <h1>Who is {this.state.selected}?</h1>
+          <h1>Who is {this.state.theOne.name}?</h1>
           {
-            this.state.people.map(function(person, index){
-              var classNameExt = this.state.selected === person.name ? 'right' : 'wrong';
 
+            this.state.randoms.map(function(person, index){
+              //
+              var classNameRejoinder = this.state.theOne.name === person.name ? 'right' : 'wrong';
+              //var classNameVisible = {this.state.isHidden ? "hidden" :""}
+              // change state in specific NOTE
               return (
-                <article key={index} className="person">
-                  <img src={person.url}  />
-                  <span className={"name hidden " + classNameExt}>
-                    <h2>{person.name}</h2>
-                  </span>
+
+                <article key={index} className="person" onClick={this.toggleHighlight.bind(null, index)}>
+                  <img src={person.url} />
+                  <ToggleDisplay className={"name " + classNameRejoinder} show={person.highlighted}>
+                    {person.name}
+                  </ToggleDisplay>
                 </article>
               );
             }, this)}
@@ -52,4 +125,5 @@ var NameGame = React.createClass({
     }
   });
 
-ReactDOM.render(<NameGame source="http://api.namegame.willowtreemobile.com/" />, document.getElementById("namegame"));
+var init = (function f() {
+  ReactDOM.render(<NameGame source="http://api.namegame.willowtreemobile.com/" />, document.getElementById("namegame")); return f; })()

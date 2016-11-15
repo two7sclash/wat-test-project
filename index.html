@@ -1,9 +1,74 @@
 <!doctype html>
 <html>
   <head>
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans" rel="stylesheet">
+    <style>
+    * {
+      font-family: 'Work Sans', sans-serif;
+    }
+      .person {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 20%;
+    cursor: pointer;
+    position: relative;
+    float: left;
+    padding: 5px;
+      }
+
+      .person span {
+    font-size: 16px;
+    -webkit-transition: all .2s linear;
+    transition: all .5s linear;
+    opacity: 1;
+    position: absolute;
+    bottom: 10px;
+    left: 5px;
+    right: 5px;
+    top: 5px;
+    padding: 10px;
+    text-align: center;
+    color: white;
+    display: block;
+  }
+
+  .person span h2 {
+    -webkit-transition: all .2s linear;
+    transition: all .5s linear;
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+}
+
+  .wrong {
+    background-color: rgba(200,0,0,0.5);
+}
+
+.person img {
+    width: 100%;
+}
+
+.right {
+    background-color: rgba(0,200,0,0.5);
+}
+
+.hidden {
+    opacity: 0!important;
+}
+    </style>
+
   </head>
   <body>
     <div id="namegame"></div>
+    <div data-video="NeF7jqf0GU4"
+         data-autoplay="0"
+         data-loop="1"
+         id="youtube-audio">
+    </div>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://cdn.rawgit.com/labnol/files/master/yt.js"></script>
     <script src="build/app.js"></script>
   </body>
 </html>
