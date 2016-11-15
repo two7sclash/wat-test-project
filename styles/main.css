@@ -1,3 +1,59 @@
 #index .container {
-	margin-top: 50px;
+    margin-top: 50px;
+}
+
+* {
+    font-family: 'Work Sans', sans-serif;
+}
+
+.person {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 20%;
+    cursor: pointer;
+    position: relative;
+    float: left;
+    padding: 5px;
+}
+
+.person span {
+    font-size: 16px;
+    -webkit-transition: all .2s linear;
+    transition: all .5s linear;
+    opacity: 1;
+    position: absolute;
+    bottom: 10px;
+    left: 5px;
+    right: 5px;
+    top: 5px;
+    padding: 10px;
+    text-align: center;
+    color: white;
+    display: block;
+}
+
+.person span h2 {
+    -webkit-transition: all .2s linear;
+    transition: all .5s linear;
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+}
+
+.wrong {
+    background-color: rgba(200, 0, 0, 0.5);
+}
+
+.person img {
+    width: 100%;
+}
+
+.right {
+    background-color: rgba(0, 200, 0, 0.5);
+}
+
+.hidden {
+    opacity: 0!important;
 }

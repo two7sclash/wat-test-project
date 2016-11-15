@@ -65,9 +65,15 @@ var NameGame = React.createClass({
       newPeople[i].highlighted = !newPeople[i].highlighted
       this.setState({ randoms: newPeople });
 
-      if (this.state.randoms[i].name === this.state.theOne.name)
+      debugger;
+
+      if (newPeople[i].name === this.state.theOne.name)
       {
+
         setTimeout(() => {
+          _.filter(this.state.randoms, {highlighted: true}).map(function(item){
+            item.highlighted = false;
+          })
           init()
         }, 2000);
       }

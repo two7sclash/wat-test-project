@@ -1,6 +1,6 @@
 {
   "name": "wat-test-project",
-  "version": "1.0.0",
+  "version": "1.3.3",
   "description": "WillowTree Name Game",
   "main": "index.js",
   "dependencies": {
@@ -25,11 +25,17 @@
     "eslint-plugin-jsx-a11y": "^3.0.1",
     "eslint-plugin-promise": "^3.3.2",
     "eslint-plugin-react": "^6.7.0",
-    "eslint-plugin-standard": "^2.0.1"
+    "eslint-plugin-standard": "^2.0.1",
+    "livereload": "^0.6.0",
+    "onchange": "^3.0.2",
+    "uglify": "^0.1.5"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify -t [ babelify --presets [ react ] ] src/main.js -o build/app.js"
+    "build": "browserify -t [ babelify --presets [ react ] ] src/main.js -o build/app.js",
+    "client": "http-server -p 8089 -s",
+    "uglify": "uglifyjs -c -v -o build/app.min.js build/app.js",
+    "onchange-app": "onchange src/main.js -- npm run build"
   },
   "repository": {
     "type": "git",
